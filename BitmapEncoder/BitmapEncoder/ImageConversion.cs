@@ -161,33 +161,10 @@ namespace BitmapEncoder
 
                     //get the a1,a2,a3 from bitmap pixel
                     Color pi = inImage.GetPixel(iX, iY);
-                    bool a1 = (pi.R & 1) == 1;
-                    bool a2 = (pi.G & 1) == 1;
-                    bool a3 = (pi.B & 1) == 1;
-
-                    bool a1a2 = a1 ^ a2;
-                    bool a1a3 = a1 ^ a3;
-
-                    if(!a1a2 && !a1a3)
-                    {
-                        bits[bitsLoc++] = false;
-                        bits[bitsLoc++] = false;
-                    }
-                    else if (a1a2 && a1a3)
-                    {
-                        bits[bitsLoc++] = true;
-                        bits[bitsLoc++] = false;
-                    }
-                    else if (!a1a2 && a1a3)
-                    {
-                        bits[bitsLoc++] = true;
-                        bits[bitsLoc++] = true;
-                    }
-                    else
-                    {
-                        bits[bitsLoc++] = false;
-                        bits[bitsLoc++] = true;
-                    }
+                    bool a1a2 = ((pi.R & 1) ^ (pi.G & 1)) == 1;
+                    bool a1a3 = ((pi.R & 1) ^ (pi.B & 1)) == 1;
+                    bits[bitsLoc++] = a1a3;
+                    bits[bitsLoc++] = a1a3 ^ a1a2;
                 }
             return false;
         }
