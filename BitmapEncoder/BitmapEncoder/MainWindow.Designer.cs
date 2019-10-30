@@ -32,6 +32,7 @@
             this.pbImage1 = new System.Windows.Forms.PictureBox();
             this.pbImage2 = new System.Windows.Forms.PictureBox();
             this.toolStripMainMenu = new System.Windows.Forms.ToolStrip();
+            this.btnOpen1 = new System.Windows.Forms.ToolStripButton();
             this.btnOpen2 = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnEncode = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +45,6 @@
             this.tbEncodeKey = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tbSteganographicKey = new System.Windows.Forms.TextBox();
-            this.btnOpen1 = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage2)).BeginInit();
             this.toolStripMainMenu.SuspendLayout();
@@ -82,6 +82,15 @@
             this.toolStripMainMenu.TabIndex = 2;
             this.toolStripMainMenu.Text = "toolStrip1";
             // 
+            // btnOpen1
+            // 
+            this.btnOpen1.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen1.Image")));
+            this.btnOpen1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpen1.Name = "btnOpen1";
+            this.btnOpen1.Size = new System.Drawing.Size(84, 22);
+            this.btnOpen1.Text = "Open (left)";
+            this.btnOpen1.Click += new System.EventHandler(this.btnOpen1_Click);
+            // 
             // btnOpen2
             // 
             this.btnOpen2.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen2.Image")));
@@ -114,8 +123,8 @@
             this.btnDecode.Image = ((System.Drawing.Image)(resources.GetObject("btnDecode.Image")));
             this.btnDecode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDecode.Name = "btnDecode";
-            this.btnDecode.Size = new System.Drawing.Size(175, 22);
-            this.btnDecode.Text = "Decode message (R using L)";
+            this.btnDecode.Size = new System.Drawing.Size(134, 22);
+            this.btnDecode.Text = "Decode message (R)";
             this.btnDecode.Click += new System.EventHandler(this.btnDecode_Click);
             // 
             // tbMessage
@@ -175,15 +184,6 @@
             this.tbSteganographicKey.Name = "tbSteganographicKey";
             this.tbSteganographicKey.Size = new System.Drawing.Size(499, 20);
             this.tbSteganographicKey.TabIndex = 8;
-            // 
-            // btnOpen1
-            // 
-            this.btnOpen1.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen1.Image")));
-            this.btnOpen1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnOpen1.Name = "btnOpen1";
-            this.btnOpen1.Size = new System.Drawing.Size(84, 22);
-            this.btnOpen1.Text = "Open (left)";
-            this.btnOpen1.Click += new System.EventHandler(this.btnOpen1_Click);
             // 
             // MainWindow
             // 

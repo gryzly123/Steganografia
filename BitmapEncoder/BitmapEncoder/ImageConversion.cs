@@ -126,10 +126,8 @@ namespace BitmapEncoder
             return (msgLoc + 1 == msgLen && bitsLoc == 8);
         }
 
-        public static bool DecodeMessageInImageUsingReference(Bitmap inImage, Bitmap refImage, out byte[] outMessage)
+        public static bool DecodeMessageInImage(Bitmap inImage, out byte[] outMessage)
         {
-            if (inImage.Size != refImage.Size) throw new Exception("resolution mismatch");
-
             int x = inImage.Size.Width;
             int y = inImage.Size.Height;
 
@@ -163,32 +161,39 @@ namespace BitmapEncoder
 
                     //get the a1,a2,a3 from bitmap pixel
                     Color pi = inImage.GetPixel(iX, iY);
-                    Color pr = refImage.GetPixel(iX, iY);
+                    bool a1 = (pi.R & 1) == 1;
+                    bool a2 = (pi.G & 1) == 1;
+                    bool a3 = (pi.B & 1) == 1;
 
-                    int action = (pi.R != pr.R) ? 1
-                               :((pi.G != pr.G) ? 2
-                               :((pi.B != pr.B) ? 3
-                               : 0));
+                    bool a1a2 = a1 ^ a2;
+                    bool a1a3 = a1 ^ a3;
 
-                    bool a1 = (pr.R & 1) != 0;
-                    bool a2 = (pr.G & 1) != 0;
-                    bool a3 = (pr.B & 1) != 0;
-
-                    //parity based decoding with reference:
-                    bool x1 = (a1 ^ a3);
-                    if (action % 2 == 1) x1 = !x1;
-
-                    bool x2 = (a2 ^ a3);
-                    if (action > 1) x2 = !x2;
-
-                    bits[bitsLoc++] = x1;
-                    bits[bitsLoc++] = x2;
+                    if(!a1a2 && !a1a3)
+                    {
+                        bits[bitsLoc++] = false;
+                        bits[bitsLoc++] = false;
+                    }
+                    else if (a1a2 && a1a3)
+                    {
+                        bits[bitsLoc++] = true;
+                        bits[bitsLoc++] = false;
+                    }
+                    else if (!a1a2 && a1a3)
+                    {
+                        bits[bitsLoc++] = true;
+                        bits[bitsLoc++] = true;
+                    }
+                    else
+                    {
+                        bits[bitsLoc++] = false;
+                        bits[bitsLoc++] = true;
+                    }
                 }
             return false;
         }
     }
-
 }
+
 
 
 //classic 3 bit LSB replacing method loop:

@@ -76,7 +76,7 @@ namespace BitmapEncoder
             Bitmap image = (Bitmap)ImageConversion.LoadImageFromPath("C:\\Users\\knied\\Desktop\\60464685_1279936355495345_8126159015446052864_n.jpg");
 
             ImageConversion.EncodeMessageInImage(image, output2, out Bitmap cipheredImage);
-            ImageConversion.DecodeMessageInImageUsingReference(cipheredImage, image, out byte[] output3);
+            ImageConversion.DecodeMessageInImage(cipheredImage, out byte[] output3);
 
             DataCipher.DecryptAes(inputKey, output3, out byte[] output4);
             MessageBox.Show("Message after operations: " + Encoding.UTF8.GetString(output4));
@@ -122,20 +122,15 @@ namespace BitmapEncoder
                 MessageBox.Show("No decryption key provided");
                 return;
             }
-            if (loadedImg == null || encodedImg == null)
+            if (encodedImg == null)
             {
-                MessageBox.Show("[temporary] decoding from an image requires the original image to be present");
-                return;
-            }
-            if (loadedImg.Size != encodedImg.Size)
-            {
-                MessageBox.Show("Images don't match - different resolutions");
+                MessageBox.Show("No image present to decode from");
                 return;
             }
 
             byte[] inputKey = Encoding.UTF8.GetBytes(tbEncodeKey.Text);
 
-            ImageConversion.DecodeMessageInImageUsingReference(encodedImg, loadedImg, out byte[] bytesToDecode);
+            ImageConversion.DecodeMessageInImage(encodedImg, out byte[] bytesToDecode);
             byte[] decodedBytes = null;
             try
             {
