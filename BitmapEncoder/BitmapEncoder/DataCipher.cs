@@ -73,7 +73,7 @@ namespace BitmapEncoder
                 {
                     CryptoAlgorithm.Key = pdb.GetBytes(CryptoAlgorithm.KeySize / 8);
                     CryptoAlgorithm.IV = pdb.GetBytes(CryptoAlgorithm.BlockSize / 8);
-                    CryptoAlgorithm.Padding = (OriginalLength % (CryptoAlgorithm.BlockSize / 8) == 0) ? PaddingMode.Zeros : PaddingMode.PKCS7; ;
+                    CryptoAlgorithm.Padding = (OriginalLength % (CryptoAlgorithm.BlockSize / 8) == 0) ? PaddingMode.Zeros : PaddingMode.PKCS7;
                     ICryptoTransform CryptoTransform = CryptoAlgorithm.CreateDecryptor(CryptoAlgorithm.Key, CryptoAlgorithm.IV);
 
                     //do the actual decryption

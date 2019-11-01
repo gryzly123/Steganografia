@@ -179,7 +179,6 @@
             // 
             // tbSteganographicKey
             // 
-            this.tbSteganographicKey.Enabled = false;
             this.tbSteganographicKey.Location = new System.Drawing.Point(119, 386);
             this.tbSteganographicKey.Name = "tbSteganographicKey";
             this.tbSteganographicKey.Size = new System.Drawing.Size(499, 20);

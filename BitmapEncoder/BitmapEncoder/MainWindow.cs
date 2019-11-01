@@ -66,17 +66,18 @@ namespace BitmapEncoder
         {
             byte[] inputKey = Encoding.UTF8.GetBytes("ayyylmao nice key");
             byte[] inputMessage = Encoding.UTF8.GetBytes("super secret string to encode");
+            byte[] inputSKey = Encoding.UTF8.GetBytes("superkey");
 
             //SHA test
-            DataCipher.CalculateHashSha512(inputKey, out byte[] output);
-            MessageBox.Show("SHA result in bits: " + (output.Length * 8).ToString());
+            // DataCipher.CalculateHashSha512(inputKey, out byte[] output);
+            // MessageBox.Show("SHA result in bits: " + (output.Length * 8).ToString());
 
             //AES+Image encoding test
             DataCipher.EncryptAes(inputKey, inputMessage, out byte[] output2);
             Bitmap image = (Bitmap)ImageConversion.LoadImageFromPath("C:\\Users\\knied\\Desktop\\60464685_1279936355495345_8126159015446052864_n.jpg");
 
-            ImageConversion.EncodeMessageInImage(image, output2, out Bitmap cipheredImage);
-            ImageConversion.DecodeMessageInImage(cipheredImage, out byte[] output3);
+            ImageConversion.EncodeMessageInImage(image, output2, inputSKey, out Bitmap cipheredImage);
+            ImageConversion.DecodeMessageInImage(cipheredImage, inputSKey, out byte[] output3);
 
             DataCipher.DecryptAes(inputKey, output3, out byte[] output4);
             MessageBox.Show("Message after operations: " + Encoding.UTF8.GetString(output4));
@@ -99,12 +100,24 @@ namespace BitmapEncoder
                 MessageBox.Show("No image to encrypt messages in provided");
                 return;
             }
+            if (string.IsNullOrEmpty(tbSteganographicKey.Text))
+            {
+                if(MessageBox.Show("No steganographic key found. Re-use the encryption key instead?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    tbSteganographicKey.Text = tbEncodeKey.Text;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             byte[] inputKey = Encoding.UTF8.GetBytes(tbEncodeKey.Text);
+            byte[] inputSKey = Encoding.UTF8.GetBytes(tbSteganographicKey.Text);
             byte[] inputMessage = Encoding.UTF8.GetBytes(tbMessage.Text);
 
             DataCipher.EncryptAes(inputKey, inputMessage, out byte[] bytesToEncode);
-            if (ImageConversion.EncodeMessageInImage(loadedImg, bytesToEncode, out Bitmap cipheredImage))
+            if (ImageConversion.EncodeMessageInImage(loadedImg, bytesToEncode, inputSKey, out Bitmap cipheredImage))
             {
                 encodedImg = cipheredImage;
                 pbImage2.Image = encodedImg;
@@ -127,10 +140,22 @@ namespace BitmapEncoder
                 MessageBox.Show("No image present to decode from");
                 return;
             }
+            if (string.IsNullOrEmpty(tbSteganographicKey.Text))
+            {
+                if (MessageBox.Show("No steganographic key found. Re-use the encryption key instead?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    tbSteganographicKey.Text = tbEncodeKey.Text;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             byte[] inputKey = Encoding.UTF8.GetBytes(tbEncodeKey.Text);
+            byte[] inputSKey = Encoding.UTF8.GetBytes(tbSteganographicKey.Text);
 
-            ImageConversion.DecodeMessageInImage(encodedImg, out byte[] bytesToDecode);
+            ImageConversion.DecodeMessageInImage(encodedImg, inputSKey, out byte[] bytesToDecode);
             byte[] decodedBytes = null;
             try
             {
