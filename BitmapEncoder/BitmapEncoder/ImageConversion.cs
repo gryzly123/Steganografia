@@ -6,6 +6,8 @@ namespace BitmapEncoder
 {
     public class ImageConversion
     {
+        private const int ByteSizeInBits = 40; // 8*5 (hamming)
+
         public static Image LoadImageFromPath(string Filepath)
         {
             try
@@ -19,51 +21,34 @@ namespace BitmapEncoder
             }
         }
 
-        //  public static byte[] ImageToBytes(Image image)
-        //  {
-        //      MessageBox.Show((image.HorizontalResolution * image.VerticalResolution).ToString());
-        //  
-        //      //using (MemoryStream ms = new MemoryStream())
-        //      //{
-        //      //    image.Save(ms, ImageCodecInfo.GetImageDecoders().,  ImageFormat.MemoryBmp);
-        //      //    MessageBox.Show((ms.ToArray().Length).ToString());
-        //      //    return ms.ToArray();
-        //      //}
-        //  }
-        //  
-        //  public static Image BytesToImage(byte[] bytes, Point resolution)
-        //  {
-        //      using (MemoryStream ms = new MemoryStream(bytes))
-        //      {
-        //          return Image.FromStream(ms);
-        //      }
-        //  }
+        private static readonly bool[] Hamming0 = { false, false, true , false, true  };
+        private static readonly bool[] Hamming1 = { true , true , false, true , false };
 
-        public static bool[] ByteToBits(byte inByte)
+        public static bool[] ByteToHammingBits(byte inByte)
         {
-            return new bool[]
-            {
-               (inByte & 1)   != 0,
-               (inByte & 2)   != 0,
-               (inByte & 4)   != 0,
-               (inByte & 8)   != 0,
-               (inByte & 16)  != 0,
-               (inByte & 32)  != 0,
-               (inByte & 64)  != 0,
-               (inByte & 128) != 0
-            };
+            bool[] result = new bool[40];
+            for(byte i = 0; i < 8; ++i)
+                (((1 << i) & inByte) != 0 ? Hamming1 : Hamming0).CopyTo(result, i * 5); //i hate myself
+            return result;
         }
 
-        public static byte BitsToByte(bool[] inBits)
+        public static byte HammingBitsToByte(bool[] inBits)
         {
-            return (byte)((inBits[0] ? 1 : 0)
-                        + (inBits[1] ? 2 : 0)
-                        + (inBits[2] ? 4 : 0)
-                        + (inBits[3] ? 8 : 0)
-                        + (inBits[4] ? 16 : 0)
-                        + (inBits[5] ? 32 : 0)
-                        + (inBits[6] ? 64 : 0)
-                        + (inBits[7] ? 128 : 0));
+            int result = 0;
+            bool[] bit = new bool[5];
+            int tmp;
+            int ptr = 0;
+
+            for(int i = 0; i < 8; ++i)
+            {
+                tmp = 0;
+                for (int j = 0; j < 5; ++j)
+                {
+                    if (Hamming1[j] == inBits[ptr++]) ++tmp;
+                }
+                result += (((tmp > 2) ? 1 : 0) << i);
+            }
+            return (byte)result;
         }
 
         public static bool EncodeMessageInImage(Image inImage, byte[] inMessage, out Bitmap outImage)
@@ -79,17 +64,17 @@ namespace BitmapEncoder
             //seek variables
             int bitsLoc = 0;
             int msgLoc = 0;
-            bool[] bits = ByteToBits(inMessage[0]);
+            bool[] bits = ByteToHammingBits(inMessage[0]);
 
-            for (int iX = 0; iX < x; ++iX)
-                for (int iY = 0; iY < y; ++iY)
+            for (int iY = 0; iY < y; ++iY)
+                for (int iX = 0; iX < x; ++iX)
                 {
                     //get next byte from message to encode, quit if message ended
-                    if (bitsLoc == 8)
+                    if (bitsLoc == ByteSizeInBits)
                     {
                         ++msgLoc;
                         if (msgLoc == msgLen) return true;
-                        bits = ByteToBits(inMessage[msgLoc]);
+                        bits = ByteToHammingBits(inMessage[msgLoc]);
                         bitsLoc = 0;
                     }
 
@@ -123,7 +108,7 @@ namespace BitmapEncoder
 
             //returns false because the message didn't fit inside the image.
             //returns true in an edge case where the message fits perfectly
-            return (msgLoc + 1 == msgLen && bitsLoc == 8);
+            return (msgLoc + 1 == msgLen && bitsLoc == ByteSizeInBits);
         }
 
         public static bool DecodeMessageInImage(Bitmap inImage, out byte[] outMessage)
@@ -133,26 +118,26 @@ namespace BitmapEncoder
 
             int msgLen = 4;
             outMessage = new byte[4];
-            bool[] bits = new bool[8];
+            bool[] bits = new bool[ByteSizeInBits];
 
             //seek counters
             int bitsLoc = 0;
             int msgLoc = 0;
 
-            for (int iX = 0; iX < x; ++iX)
-                for (int iY = 0; iY < y; ++iY)
+            for (int iY = 0; iY < y; ++iY)
+                for (int iX = 0; iX < x; ++iX)
                 {
                     //we collected an entire byte to decode, quit if message ended
-                    if (bitsLoc == 8)
+                    if (bitsLoc == ByteSizeInBits)
                     {
-                        outMessage[msgLoc] = BitsToByte(bits);
+                        outMessage[msgLoc] = HammingBitsToByte(bits);
                         bitsLoc = 0;
                         ++msgLoc;
 
                         if (msgLoc == 4)
                         {
                             msgLen = (int)BitConverter.ToUInt32(outMessage, 0);
-                            if (msgLen % 16 != 0) msgLen = 4 + (((msgLen / 16) + 1) * 16);
+                            if (msgLen % 16 != 0) msgLen = 4 + ((((msgLen / 16) + 1) * 16));
                             else msgLen += 4;
                             Array.Resize(ref outMessage, msgLen);
                         }
@@ -170,32 +155,3 @@ namespace BitmapEncoder
         }
     }
 }
-
-
-
-//classic 3 bit LSB replacing method loop:
-//  for(int iX = 0; iX < x; ++iX)
-//      for(int iY = 0; iY < y; ++iY)
-//      {
-//          Color p = outImage.GetPixel(iX, iY);
-//          col = new byte[3] { p.R, p.G, p.B };
-//          for (int iP = 0; iP < 3; ++iP)
-//          {
-//              if (bitsLoc == 8)
-//              {
-//                  ++msgLoc;
-//                  if (msgLoc == msgLen) break;
-//                  bits = ByteToBits(inMessage[msgLoc]);
-//                  bitsLoc = 0;
-//              }
-//              byte val = bits[bitsLoc++] ? (byte)255 : (byte)254;
-//              switch(iP)
-//              {
-//                  case 0: col[0] = (byte)(col[0] & val); break;
-//                  case 1: col[1] = (byte)(col[1] & val); break;
-//                  case 2: col[2] = (byte)(col[2] & val); break;
-//              }
-//          }
-//          outImage.SetPixel(iX, iY, Color.FromArgb(col[0], col[1], col[2]));
-//      }
-//

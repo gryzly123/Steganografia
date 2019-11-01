@@ -14,9 +14,10 @@ namespace BitmapEncoder
 
         public static void CalculateHashSha512(byte[] Input, out byte[] Output)
         {
-            SHA512 HashAlgorithm = SHA512.Create();
-            Output = HashAlgorithm.ComputeHash(Input);
-            HashAlgorithm.Dispose();
+            using (SHA512 HashAlgorithm = SHA512.Create())
+            {
+                Output = HashAlgorithm.ComputeHash(Input);
+            }
         }
 
         public static void EncryptAes(byte[] InputKey, byte[] InputData, out byte[] OutputData)
