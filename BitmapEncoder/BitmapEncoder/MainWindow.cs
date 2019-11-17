@@ -155,7 +155,12 @@ namespace BitmapEncoder
             byte[] inputKey = Encoding.UTF8.GetBytes(tbEncodeKey.Text);
             byte[] inputSKey = Encoding.UTF8.GetBytes(tbSteganographicKey.Text);
 
-            ImageConversion.DecodeMessageInImage(encodedImg, inputSKey, out byte[] bytesToDecode);
+            if(!ImageConversion.DecodeMessageInImage(encodedImg, inputSKey, out byte[] bytesToDecode))
+            {
+                MessageBox.Show("Hidden message length couldn't be read. Is the steganographic key valid?");
+                return;
+            }
+
             byte[] decodedBytes = null;
             try
             {

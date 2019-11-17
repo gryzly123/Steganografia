@@ -151,6 +151,8 @@ namespace BitmapEncoder
                     if (msgLoc == 4)
                     {
                         msgLen = (int)BitConverter.ToUInt32(outMessage, 0);
+                        if (msgLen < 0 || msgLen > (x * y / ByteSizeInBits)) return false; //invalid length suggests invalid rand seed
+
                         if (msgLen % 16 != 0) msgLen = 4 + ((((msgLen / 16) + 1) * 16));
                         else msgLen += 4;
                         PixelOrder = GetPermutation(msgLen * ByteSizeInBits, x * y, rngSeed);
