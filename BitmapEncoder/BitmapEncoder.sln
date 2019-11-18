@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitmapEncoder", "BitmapEncoder\BitmapEncoder.csproj", "{6BD9079E-E68D-4966-AA83-6C72DDCC22C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JpegDetector", "JpegDetector\JpegDetector.csproj", "{2F171C86-2067-40A8-BB13-625584CAEBAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6BD9079E-E68D-4966-AA83-6C72DDCC22C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD9079E-E68D-4966-AA83-6C72DDCC22C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD9079E-E68D-4966-AA83-6C72DDCC22C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F171C86-2067-40A8-BB13-625584CAEBAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F171C86-2067-40A8-BB13-625584CAEBAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F171C86-2067-40A8-BB13-625584CAEBAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F171C86-2067-40A8-BB13-625584CAEBAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
