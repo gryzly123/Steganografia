@@ -23,7 +23,7 @@ namespace OnionClient
             //Application.Run(new Form1());
 
             ConsoleKeyInfo key = Console.ReadKey();
-            OnionEndpoint Endpoint = new OnionEndpoint { targetIp = IPAddress.Parse("127.0.0.1"), port = 1111 };
+            OnionEndpoint Endpoint = new OnionEndpoint { targetIp = IPAddress.Parse("127.0.0.1"), port = 1111, aesKey = Encoding.ASCII.GetBytes("ayyylmaooooooo") };
             
             switch (key.Key)
             {
