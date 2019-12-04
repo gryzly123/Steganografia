@@ -43,6 +43,7 @@
     <Compile Include="AesEncoder.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="OnionEndpoint.cs" />
+    <Compile Include="OnionMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TcpSupport.cs" />
   </ItemGroup>
