@@ -37,7 +37,7 @@ namespace OnionClient
                 case ConsoleKey.D3:
                     OnionEndpoint thisRelay = endpoints[(int)(key.Key - 49)];
                     Console.WriteLine("Running OnionRelay at {0}:{1} with key {2}", thisRelay.hostName, thisRelay.port.ToString(), Convert.ToBase64String(thisRelay.aesKey));
-                    TcpSupport.RunSecureServer(thisRelay, OnionMessage.ExecuteReceivedCommand);
+                    OnionTransport.RunSecureServer(thisRelay, OnionMessage.ExecuteReceivedCommand);
                     break;
 
                 case ConsoleKey.C:

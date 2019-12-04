@@ -19,7 +19,7 @@ namespace OnionCore
             }
 
             relayRoute.Reverse();
-            TcpSupport.SendRawData(relayRoute[0], secureCommandBytes, out byte[] secureCommandResultBytes);
+            OnionTransport.SendRawData(relayRoute[0], secureCommandBytes, out byte[] secureCommandResultBytes);
 
             for(int i = 0; i < relayRoute.Count; ++i)
             {
