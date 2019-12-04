@@ -41,9 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AesEncoder.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="Commands\DownloadFileCommand.cs" />
+    <Compile Include="Commands\RelayMessageCommand.cs" />
+    <Compile Include="OnionCommand.cs" />
     <Compile Include="OnionEndpoint.cs" />
-    <Compile Include="OnionMessage.cs" />
+    <Compile Include="OnionMessaging.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OnionTransport.cs" />
   </ItemGroup>

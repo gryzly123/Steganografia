@@ -37,12 +37,12 @@ namespace OnionClient
                 case ConsoleKey.D3:
                     OnionEndpoint thisRelay = endpoints[(int)(key.Key - 49)];
                     Console.WriteLine("Running OnionRelay at {0}:{1} with key {2}", thisRelay.hostName, thisRelay.port.ToString(), Convert.ToBase64String(thisRelay.aesKey));
-                    OnionTransport.RunSecureServer(thisRelay, OnionMessage.ExecuteReceivedCommand);
+                    OnionTransport.RunSecureServer(thisRelay, OnionMessaging.ExecuteReceivedCommand);
                     break;
 
                 case ConsoleKey.C:
-                    DownloadFile dfCommand = new DownloadFile() { targetUrl = "https://drupal.kniedzwiecki.eu/" };
-                    OnionMessage.ExecutePackedCommand(endpoints, dfCommand, out byte[] outBytes);
+                    DownloadFileCommand dfCommand = new DownloadFileCommand() { targetUrl = "https://drupal.kniedzwiecki.eu/" };
+                    OnionMessaging.ExecutePackedCommand(endpoints, dfCommand, out byte[] outBytes);
                     Console.WriteLine(Encoding.UTF8.GetString(outBytes));
                     break;
 
