@@ -23,18 +23,27 @@ namespace OnionClient
             //Application.Run(new Form1());
 
             ConsoleKeyInfo key = Console.ReadKey();
-            OnionEndpoint Endpoint = new OnionEndpoint { targetIp = IPAddress.Parse("127.0.0.1"), port = 1111, aesKey = Encoding.ASCII.GetBytes("ayyylmaooooooo") };
-            
+
+            List<OnionEndpoint> endpoints = new List<OnionEndpoint> {
+                new OnionEndpoint { hostName = "127.0.0.1", port = 1111, aesKey = Encoding.ASCII.GetBytes("ayyylmaoooooooo") },
+                new OnionEndpoint { hostName = "127.0.0.1", port = 2222, aesKey = Encoding.ASCII.GetBytes("twojstarypijany") },
+                new OnionEndpoint { hostName = "127.0.0.1", port = 3333, aesKey = Encoding.ASCII.GetBytes("kek100lmao69420") },
+            };
+
             switch (key.Key)
             {
-                case ConsoleKey.S:
-                    TcpSupport.RunServer(Endpoint, HandleData);
+                case ConsoleKey.D1:
+                case ConsoleKey.D2:
+                case ConsoleKey.D3:
+                    OnionEndpoint thisRelay = endpoints[(int)(key.Key - 49)];
+                    Console.WriteLine("Running OnionRelay at {0}:{1} with key {2}", thisRelay.hostName, thisRelay.port.ToString(), Convert.ToBase64String(thisRelay.aesKey));
+                    TcpSupport.RunSecureServer(thisRelay, OnionMessage.ExecuteReceivedCommand);
                     break;
 
                 case ConsoleKey.C:
-                    byte[] inData = Encoding.UTF8.GetBytes("test message");
-                    TcpSupport.SendData(Endpoint, inData, out byte[] outData);
-                    Console.WriteLine(Encoding.UTF8.GetString(outData));
+                    DownloadFile dfCommand = new DownloadFile() { targetUrl = "https://drupal.kniedzwiecki.eu/" };
+                    OnionMessage.ExecutePackedCommand(endpoints, dfCommand, out byte[] outBytes);
+                    Console.WriteLine(Encoding.UTF8.GetString(outBytes));
                     break;
 
                 default:

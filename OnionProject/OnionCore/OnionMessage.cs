@@ -5,7 +5,7 @@ namespace OnionCore
 {
     public class OnionMessage
     {
-        public static void SendPackedCommand(List<OnionEndpoint> relayRoute, Command targetCommand, out byte[] outBytes)
+        public static void ExecutePackedCommand(List<OnionEndpoint> relayRoute, Command targetCommand, out byte[] outBytes)
         {
             relayRoute.Reverse();
 
@@ -29,7 +29,7 @@ namespace OnionCore
             outBytes = secureCommandResultBytes;
         }
 
-        public static void HandleCommand(byte[] inBytes, out byte[] outBytes)
+        public static void ExecuteReceivedCommand(byte[] inBytes, out byte[] outBytes)
         {
             Command c = Command.DetectCommand(inBytes);
             if (c == null)

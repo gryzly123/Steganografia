@@ -92,7 +92,7 @@ namespace OnionCore
                 if (messageLength == 0) return false;
 
                 targetMessage = new byte[inData.Length - memoryOffset];
-                Array.Copy(inData, targetMessage, inData.Length - memoryOffset);
+                Array.Copy(inData, memoryOffset, targetMessage, 0, messageLength);
 
                 //everything was serialized
                 return true;
