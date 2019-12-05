@@ -10,11 +10,11 @@ namespace OnionRelay
         {
             UInt16 targetPort;
             try               { targetPort = UInt16.Parse(args[0]); }
-            catch (Exception) { targetPort = 5555; }
+            catch (Exception) { targetPort = 1111; }
 
             byte[] targetKey;
-            try              { targetKey = Convert.FromBase64String(args[1]); }
-            catch(Exception) { targetKey = Encoding.ASCII.GetBytes("default-bytes-from-ascii"); }
+            try              { targetKey = Encoding.ASCII.GetBytes(args[1]) /*Convert.FromBase64String(args[1])*/; }
+            catch(Exception) { targetKey = Encoding.ASCII.GetBytes("supersecretkey1"); }
 
             OnionEndpoint thisRelay = new OnionEndpoint() {
                 hostName = "127.0.0.1",
