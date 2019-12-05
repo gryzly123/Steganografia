@@ -48,6 +48,10 @@
             this.btnRunRequest = new System.Windows.Forms.Button();
             this.tbFileLocation = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ofdImportRelays = new System.Windows.Forms.OpenFileDialog();
+            this.sfdExportRelays = new System.Windows.Forms.SaveFileDialog();
+            this.sfdTargetFile = new System.Windows.Forms.SaveFileDialog();
+            this.btnEdit = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -55,6 +59,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnEdit);
             this.groupBox1.Controls.Add(this.btnExportRelays);
             this.groupBox1.Controls.Add(this.btnImportRelays);
             this.groupBox1.Controls.Add(this.btnAddRelay);
@@ -67,7 +72,7 @@
             this.groupBox1.Controls.Add(this.listKnownRelays);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(289, 220);
+            this.groupBox1.Size = new System.Drawing.Size(289, 226);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Relay configuration";
@@ -75,26 +80,28 @@
             // btnExportRelays
             // 
             this.btnExportRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnExportRelays.Location = new System.Drawing.Point(93, 191);
+            this.btnExportRelays.Location = new System.Drawing.Point(49, 199);
             this.btnExportRelays.Name = "btnExportRelays";
-            this.btnExportRelays.Size = new System.Drawing.Size(46, 23);
+            this.btnExportRelays.Size = new System.Drawing.Size(51, 23);
             this.btnExportRelays.TabIndex = 10;
             this.btnExportRelays.Text = "Export";
             this.btnExportRelays.UseVisualStyleBackColor = true;
+            this.btnExportRelays.Click += new System.EventHandler(this.btnExportRelays_Click);
             // 
             // btnImportRelays
             // 
             this.btnImportRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnImportRelays.Location = new System.Drawing.Point(47, 191);
+            this.btnImportRelays.Location = new System.Drawing.Point(49, 177);
             this.btnImportRelays.Name = "btnImportRelays";
-            this.btnImportRelays.Size = new System.Drawing.Size(46, 23);
+            this.btnImportRelays.Size = new System.Drawing.Size(51, 23);
             this.btnImportRelays.TabIndex = 9;
             this.btnImportRelays.Text = "Import";
             this.btnImportRelays.UseVisualStyleBackColor = true;
+            this.btnImportRelays.Click += new System.EventHandler(this.btnImportRelays_Click);
             // 
             // btnAddRelay
             // 
-            this.btnAddRelay.Location = new System.Drawing.Point(5, 191);
+            this.btnAddRelay.Location = new System.Drawing.Point(5, 177);
             this.btnAddRelay.Name = "btnAddRelay";
             this.btnAddRelay.Size = new System.Drawing.Size(18, 23);
             this.btnAddRelay.TabIndex = 8;
@@ -104,7 +111,7 @@
             // 
             // btnRemoveRelay
             // 
-            this.btnRemoveRelay.Location = new System.Drawing.Point(22, 191);
+            this.btnRemoveRelay.Location = new System.Drawing.Point(22, 177);
             this.btnRemoveRelay.Name = "btnRemoveRelay";
             this.btnRemoveRelay.Size = new System.Drawing.Size(18, 23);
             this.btnRemoveRelay.TabIndex = 7;
@@ -115,22 +122,22 @@
             // btnDequeueRelay
             // 
             this.btnDequeueRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnDequeueRelay.Location = new System.Drawing.Point(213, 191);
+            this.btnDequeueRelay.Location = new System.Drawing.Point(107, 199);
             this.btnDequeueRelay.Name = "btnDequeueRelay";
-            this.btnDequeueRelay.Size = new System.Drawing.Size(70, 23);
+            this.btnDequeueRelay.Size = new System.Drawing.Size(32, 23);
             this.btnDequeueRelay.TabIndex = 5;
-            this.btnDequeueRelay.Text = "Dequeue";
+            this.btnDequeueRelay.Text = "<<";
             this.btnDequeueRelay.UseVisualStyleBackColor = true;
             this.btnDequeueRelay.Click += new System.EventHandler(this.btnDequeueRelay_Click);
             // 
             // btnEnqueueRelay
             // 
             this.btnEnqueueRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnEnqueueRelay.Location = new System.Drawing.Point(143, 191);
+            this.btnEnqueueRelay.Location = new System.Drawing.Point(107, 177);
             this.btnEnqueueRelay.Name = "btnEnqueueRelay";
-            this.btnEnqueueRelay.Size = new System.Drawing.Size(70, 23);
+            this.btnEnqueueRelay.Size = new System.Drawing.Size(32, 23);
             this.btnEnqueueRelay.TabIndex = 4;
-            this.btnEnqueueRelay.Text = "Enqueue";
+            this.btnEnqueueRelay.Text = ">>";
             this.btnEnqueueRelay.UseVisualStyleBackColor = true;
             this.btnEnqueueRelay.Click += new System.EventHandler(this.btnEnqueueRelay_Click);
             // 
@@ -157,15 +164,16 @@
             this.listUsedRelays.FormattingEnabled = true;
             this.listUsedRelays.Location = new System.Drawing.Point(144, 42);
             this.listUsedRelays.Name = "listUsedRelays";
-            this.listUsedRelays.Size = new System.Drawing.Size(138, 147);
+            this.listUsedRelays.Size = new System.Drawing.Size(138, 134);
             this.listUsedRelays.TabIndex = 1;
+            this.listUsedRelays.DoubleClick += new System.EventHandler(this.listUsedRelays_DoubleClick);
             // 
             // listKnownRelays
             // 
             this.listKnownRelays.FormattingEnabled = true;
             this.listKnownRelays.Location = new System.Drawing.Point(6, 42);
             this.listKnownRelays.Name = "listKnownRelays";
-            this.listKnownRelays.Size = new System.Drawing.Size(132, 147);
+            this.listKnownRelays.Size = new System.Drawing.Size(132, 134);
             this.listKnownRelays.TabIndex = 0;
             this.listKnownRelays.DoubleClick += new System.EventHandler(this.listKnownRelays_DoubleClick);
             // 
@@ -185,9 +193,9 @@
             this.groupBox2.Controls.Add(this.tbDiskPath);
             this.groupBox2.Controls.Add(this.btnRunRequest);
             this.groupBox2.Controls.Add(this.tbFileLocation);
-            this.groupBox2.Location = new System.Drawing.Point(12, 238);
+            this.groupBox2.Location = new System.Drawing.Point(12, 244);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(289, 147);
+            this.groupBox2.Size = new System.Drawing.Size(289, 141);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File download";
@@ -217,16 +225,17 @@
             // btnChoosePath
             // 
             this.btnChoosePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnChoosePath.Location = new System.Drawing.Point(249, 66);
+            this.btnChoosePath.Location = new System.Drawing.Point(249, 65);
             this.btnChoosePath.Name = "btnChoosePath";
-            this.btnChoosePath.Size = new System.Drawing.Size(33, 23);
+            this.btnChoosePath.Size = new System.Drawing.Size(33, 22);
             this.btnChoosePath.TabIndex = 11;
             this.btnChoosePath.Text = "...";
             this.btnChoosePath.UseVisualStyleBackColor = true;
+            this.btnChoosePath.Click += new System.EventHandler(this.btnChoosePath_Click);
             // 
             // tbDiskPath
             // 
-            this.tbDiskPath.Location = new System.Drawing.Point(93, 67);
+            this.tbDiskPath.Location = new System.Drawing.Point(93, 66);
             this.tbDiskPath.Name = "tbDiskPath";
             this.tbDiskPath.Size = new System.Drawing.Size(150, 20);
             this.tbDiskPath.TabIndex = 4;
@@ -235,7 +244,7 @@
             // 
             this.btnRunRequest.Location = new System.Drawing.Point(6, 95);
             this.btnRunRequest.Name = "btnRunRequest";
-            this.btnRunRequest.Size = new System.Drawing.Size(276, 46);
+            this.btnRunRequest.Size = new System.Drawing.Size(276, 36);
             this.btnRunRequest.TabIndex = 1;
             this.btnRunRequest.Text = "Run";
             this.btnRunRequest.UseVisualStyleBackColor = true;
@@ -245,7 +254,7 @@
             // 
             this.tbFileLocation.Location = new System.Drawing.Point(9, 19);
             this.tbFileLocation.Name = "tbFileLocation";
-            this.tbFileLocation.Size = new System.Drawing.Size(273, 20);
+            this.tbFileLocation.Size = new System.Drawing.Size(272, 20);
             this.tbFileLocation.TabIndex = 0;
             this.tbFileLocation.Text = "https://drupal.kniedzwiecki.eu/";
             // 
@@ -258,6 +267,33 @@
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "File preview";
+            // 
+            // ofdImportRelays
+            // 
+            this.ofdImportRelays.DefaultExt = "relays";
+            this.ofdImportRelays.Filter = "Onion Relay list|*.relays";
+            this.ofdImportRelays.FileOk += new System.ComponentModel.CancelEventHandler(this.ofdImportRelays_FileOk);
+            // 
+            // sfdExportRelays
+            // 
+            this.sfdExportRelays.DefaultExt = "relays";
+            this.sfdExportRelays.Filter = "Onion Relay list|*.relays";
+            this.sfdExportRelays.FileOk += new System.ComponentModel.CancelEventHandler(this.sfdExportRelays_FileOk);
+            // 
+            // sfdTargetFile
+            // 
+            this.sfdTargetFile.FileOk += new System.ComponentModel.CancelEventHandler(this.sfdTargetFile_FileOk);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnEdit.Location = new System.Drawing.Point(5, 199);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(35, 23);
+            this.btnEdit.TabIndex = 11;
+            this.btnEdit.Text = "Edit";
+            this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // MainWindow
             // 
@@ -302,6 +338,10 @@
         private System.Windows.Forms.Button btnRunRequest;
         private System.Windows.Forms.TextBox tbFileLocation;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.OpenFileDialog ofdImportRelays;
+        private System.Windows.Forms.SaveFileDialog sfdExportRelays;
+        private System.Windows.Forms.SaveFileDialog sfdTargetFile;
     }
 }
 
