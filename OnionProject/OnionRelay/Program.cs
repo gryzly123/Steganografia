@@ -23,7 +23,11 @@ namespace OnionRelay
             };
 
             Console.WriteLine("Running OnionRelay at {0}:{1} with key {2}", thisRelay.hostName, thisRelay.port.ToString(), Convert.ToBase64String(thisRelay.aesKey));
-            OnionTransport.RunSecureServer(thisRelay, OnionMessaging.ExecuteReceivedCommand);
+            while (true)
+            {
+                //server gets shut down when an internal error occurs, the while loop restarts it immediately
+                OnionTransport.RunSecureServer(thisRelay, OnionMessaging.ExecuteReceivedCommand);
+            }
         }
     }
 }

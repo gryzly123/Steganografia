@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OnionCore
 {
-    public class OnionMessaging
+    public static class OnionMessaging
     {
         /* Executes the specified command remotely using the provided relay route.
          * Last relay executes the actual command, previous relays execute RelayMessage commands. */

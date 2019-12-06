@@ -6,32 +6,39 @@ namespace OnionCore
 {
     public delegate void HandleTcpData(byte[] inBytes, out byte[] outBytes);
 
-    public class OnionTransport
+    public static class OnionTransport
     {
         /* Launches TCP client that sends specified data to the target relay.
          * It does not perform any AES operations, because inner messages for consequent relays
          * should already be ciphered. */
         public static void SendRawData(OnionEndpoint targetRelay, byte[] inData, out byte[] outData)
         {
-            //create client
-            using (TcpClient client = new TcpClient(targetRelay.hostName.ToString(), targetRelay.port))
+            try
             {
-                NetworkStream stream = client.GetStream();
+                //create client
+                using (TcpClient client = new TcpClient(targetRelay.hostName.ToString(), targetRelay.port))
+                {
+                    NetworkStream stream = client.GetStream();
 
-                //send data
-                stream.Write(BitConverter.GetBytes((UInt32)inData.Length), 0, 4);
-                stream.Write(inData, 0, inData.Length);
+                    //send data
+                    stream.Write(BitConverter.GetBytes((UInt32)inData.Length), 0, 4);
+                    stream.Write(inData, 0, inData.Length);
 
-                //receive response
-                byte[] targetLen = new byte[4];
-                stream.Read(targetLen, 0, 4);
-                UInt32 bytes = BitConverter.ToUInt32(targetLen, 0);
-                outData = new byte[bytes];
-                stream.Read(outData, 0, (Int32)bytes);
+                    //receive response
+                    byte[] targetLen = new byte[4];
+                    stream.Read(targetLen, 0, 4);
+                    UInt32 bytes = BitConverter.ToUInt32(targetLen, 0);
+                    outData = new byte[bytes];
+                    stream.Read(outData, 0, (Int32)bytes);
 
-                //close client
-                stream.Close();
-                client.Close();
+                    //close client
+                    stream.Close();
+                    client.Close();
+                }
+            }
+            catch(Exception)
+            {
+                outData = new byte[0];
             }
         }
 

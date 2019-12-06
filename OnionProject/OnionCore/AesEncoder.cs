@@ -37,25 +37,31 @@ namespace OnionCore
         {
             PasswordDeriveBytes pdb = new PasswordDeriveBytes(InputKey, new byte[128], "SHA512", 1);
 
-
-            //create and initialize AES object
-            using (MemoryStream DecryptionMS = new MemoryStream(InputData))
+            try
             {
-                Output = new byte[InputData.Length];
-
-                using (Aes CryptoAlgorithm = Aes.Create())
+                //create and initialize AES object
+                using (MemoryStream DecryptionMS = new MemoryStream(InputData))
                 {
-                    CryptoAlgorithm.Key = pdb.GetBytes(CryptoAlgorithm.KeySize / 8);
-                    CryptoAlgorithm.IV = pdb.GetBytes(CryptoAlgorithm.BlockSize / 8);
-                    ICryptoTransform CryptoTransform = CryptoAlgorithm.CreateDecryptor(CryptoAlgorithm.Key, CryptoAlgorithm.IV);
+                    Output = new byte[InputData.Length];
 
-                    //do the actual decryption
-                    using (CryptoStream DecryptionCS = new CryptoStream(DecryptionMS, CryptoTransform, CryptoStreamMode.Read))
+                    using (Aes CryptoAlgorithm = Aes.Create())
                     {
-                        int ResultLength = DecryptionCS.Read(Output, 0, Output.Length);
-                        Array.Resize(ref Output, ResultLength);
+                        CryptoAlgorithm.Key = pdb.GetBytes(CryptoAlgorithm.KeySize / 8);
+                        CryptoAlgorithm.IV = pdb.GetBytes(CryptoAlgorithm.BlockSize / 8);
+                        ICryptoTransform CryptoTransform = CryptoAlgorithm.CreateDecryptor(CryptoAlgorithm.Key, CryptoAlgorithm.IV);
+
+                        //do the actual decryption
+                        using (CryptoStream DecryptionCS = new CryptoStream(DecryptionMS, CryptoTransform, CryptoStreamMode.Read))
+                        {
+                            int ResultLength = DecryptionCS.Read(Output, 0, Output.Length);
+                            Array.Resize(ref Output, ResultLength);
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                Output = new byte[0];
             }
         }
     }

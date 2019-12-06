@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OnionCore
 {
-    public abstract class OnionCommandFactory
+    public static class OnionCommandFactory
     {
         //CommandCode to OnionCommand class cache
         private static Dictionary<string, Type> commands;

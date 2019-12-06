@@ -116,6 +116,12 @@ namespace OnionClient
 
         private void btnRunRequest_Click(object sender, EventArgs e)
         {
+            if(endpointsInUse.Count == 0)
+            {
+                MessageBox.Show("No relays were selected");
+                return;
+            }
+
             Execute_DownloadFile(endpointsInUse, tbFileLocation.Text, out byte[] CommandResult);
             if(CommandResult.Length == 0)
             {
@@ -146,8 +152,6 @@ namespace OnionClient
                 }
             }
         }
-
-        
 
         private void btnImportRelays_Click(object sender, EventArgs e)
         {
