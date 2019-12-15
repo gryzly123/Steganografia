@@ -8,6 +8,8 @@ namespace OnionCore
 
     public static class OnionTransport
     {
+        const int BufferSize = 256;
+
         /* Launches TCP client that sends specified data to the target relay.
          * It does not perform any AES operations, because inner messages for consequent relays
          * should already be ciphered. */
@@ -29,7 +31,15 @@ namespace OnionCore
                     stream.Read(targetLen, 0, 4);
                     UInt32 bytes = BitConverter.ToUInt32(targetLen, 0);
                     outData = new byte[bytes];
-                    stream.Read(outData, 0, (Int32)bytes);
+
+                    byte[] buffer = new byte[BufferSize];
+                    int idx = 0;
+                    while (idx < bytes)
+                    {
+                        int len = stream.Read(buffer, 0, BufferSize);
+                        Array.Copy(buffer, 0, outData, idx, len);
+                        idx += len;
+                    }
 
                     //close client
                     stream.Close();
@@ -69,7 +79,16 @@ namespace OnionCore
                     stream.Read(targetLen, 0, 4);
                     UInt32 bytes = BitConverter.ToUInt32(targetLen, 0);
                     byte[] aesInData = new byte[bytes];
-                    stream.Read(aesInData, 0, (Int32)bytes);
+
+                    byte[] buffer = new byte[BufferSize];
+                    int idx = 0;
+                    while (idx < bytes)
+                    {
+                        int len = stream.Read(buffer, 0, BufferSize);
+                        Array.Copy(buffer, 0, aesInData, idx, len);
+                        idx += len;
+                    }
+
                     AesEncoder.DecryptAes(thisRelay.aesKey, aesInData, out byte[] inData);
                     Console.WriteLine("Received {0}", Convert.ToBase64String(aesInData));
 
